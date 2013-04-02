@@ -77,7 +77,7 @@ public class App extends JApplet implements Runnable,MouseListener, ActionListen
 		this.add(buttonPanel, "North");
 		clearButton.addActionListener(this);
 		addButton.addActionListener(this);
-
+		startButton.addActionListener(this);	
 		JPanel statusPanel = new JPanel();
 		pointerPosition.setText("(0,0)");
 		statusPanel.add(pointerPosition, "West");
@@ -144,6 +144,8 @@ public class App extends JApplet implements Runnable,MouseListener, ActionListen
 					appPanel.openFile(chooseFile);
 					appPanel.repaint();
 			}
+		}else if(e.getSource()==startButton){
+			appPanel.basicProcess();
 		}
 	}
 
@@ -329,5 +331,20 @@ class AppPanel extends JPanel {
 			i++;
 		}
 		return result;
+	}
+
+	/**
+	PreProcessing
+	**/
+
+	public void basicProcess(){
+		Data tempContainer = new Data();
+		for (PointExt temp : pointContainer ) {
+			if(temp.name!=controller.opsiInit.getItemAt(controller.opsiInit.getSelectedIndex())){
+				tempContainer.add(temp);
+			}
+		}
+		tempContainer.sort();
+		tempContainer.printData();
 	}
 }
