@@ -4,8 +4,10 @@ import java.awt.geom.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Vector;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,6 +34,10 @@ public class App extends JApplet implements Runnable,MouseListener, ActionListen
 	public JLabel status                      = new JLabel();
 	public JLabel pointerPosition             = new JLabel();
 	private JFileChooser chooseFile           = new JFileChooser();
+	
+
+	
+
 
 	public static void main(String[] args) {
 		App applet = new App();
@@ -56,7 +62,6 @@ public class App extends JApplet implements Runnable,MouseListener, ActionListen
 	}
 
 	public void run(){
-
 		setLayout(new BorderLayout());
 		appPanel.setBackground(Color.white);
 		this.add(appPanel, "Center");
@@ -102,9 +107,9 @@ public class App extends JApplet implements Runnable,MouseListener, ActionListen
 			opsiInit.addItem(pc[last-1]);
 			opsiInit.setSelectedIndex(opsiInit.getItemCount()-1);
 			Object[] tempData = {opsiInit.getItemCount()-1, e.getX(), e.getY()};
-			//dataTable.setRowCount(1);
 			
 
+			//dataTable.setRowCount(1);
 			appPanel.repaint();
 		}
 	}
@@ -153,6 +158,7 @@ class AppPanel extends JPanel {
 	public Data pointContainer = new Data();
 	public AppPanel(App controller){
 		this.controller = controller;
+
 	}
 
 	/**
