@@ -13,8 +13,11 @@ import java.io.FileReader;
 import java.io.BufferedReader;
 
 public class Master extends JApplet implements Runnable, MouseListener, ActionListener, MouseMotionListener {
+	/**
+	Constant
+	**/
 	private static String windowTitle = "Concave Check";
-	private static boolean debug      = false;
+	//private static boolean debug      = false;
 	private static int windowWidth    = 1024;
 	private static int windowHeight   = 700;
 	private static JFrame mainWindow;

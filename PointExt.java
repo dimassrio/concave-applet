@@ -2,9 +2,11 @@ import java.awt.Point;
 
 public class PointExt extends Point {
 	public String name;
+	public PointExt next;
 	public static void main(String[] args) {
 			
 	}
+	
 	public PointExt(int x, int y){
 		this.setLocation(x, y);
 	}
@@ -34,7 +36,7 @@ public class PointExt extends Point {
 		return this.name;
 	}
 	public void printData(){
-		System.out.println("("+getX()+","+getY()+")");
+		System.out.println(getName()+"("+getX()+","+getY()+")");
 	}
 
 }

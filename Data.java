@@ -1,5 +1,4 @@
-public class Data extends ArrayList {
-	public Data(){
-		super();
-	}
+import java.util.ArrayList;
+
+public class Data extends ArrayList<PointExt> {
 }

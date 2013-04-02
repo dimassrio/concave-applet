@@ -1,6 +1,3 @@
-/**
-IMPORT CLASS
-*/
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
@@ -15,61 +12,56 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.BufferedReader;
 
-/**
-BEGIN MASTER APPLET
-*/
-public class Concave extends JApplet implements Runnable, ActionListener, MouseListener, MouseMotionListener {
+public class App extends JApplet implements Runnable,MouseListener, ActionListener, MouseMotionListener {
 	/**
-	Costumizable
-	*/
-	private static int windowWidth = 800, windowHeight = 600;
-	private static String windowTitle = "Concave Test";
-	/**
-	Begin applet variable
-	*/
-	private static JFrame mainWindow = new JFrame();
-	private ConcavePanel appletPanel = new ConcavePanel(this);
+	Constant
+	**/
+	private static String windowTitle = "Concave Check";
+	//private static boolean debug      = false;
+	private static int windowWidth    = 1024;
+	private static int windowHeight   = 700;
+	private static JFrame mainWindow;
+	
+	private AppPanel appPanel           = new AppPanel(this);
 	private Component currentSwitch           = null;
 	public  DefaultComboBoxModel<String> test = new DefaultComboBoxModel();
 	public  JComboBox<String> opsiInit        = new JComboBox(test);
 	private JButton clearButton               = new JButton("New");
 	private JButton addButton                 = new JButton("Open");
-	public JButton startButton               = new JButton("START");
+	private JButton startButton               = new JButton("START");
 	public JLabel status                      = new JLabel();
 	public JLabel pointerPosition             = new JLabel();
 	private JFileChooser chooseFile           = new JFileChooser();
 
-	/**
-	End variable
-	*/
 	public static void main(String[] args) {
-		Concave applet = new Concave();
+		App applet = new App();
 		applet.init();
-		JFrame dWindow = new JFrame();
+		JFrame dWindow = new JFrame();           // Create window
 		dWindow.setSize(windowWidth, windowHeight);               // Set window size
 		dWindow.setTitle(windowTitle);           // Set window title
 		dWindow.setLayout(new BorderLayout());   // Specify layout manager
 		dWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		dWindow.add(applet, "Center");           // Place applet into window
-		dWindow.setVisible(true);
+		dWindow.setVisible(true); 
 		mainWindow = dWindow;
-
 	}
-
+	
 	public void init(){
 		try{
 			SwingUtilities.invokeAndWait(this);
-		}catch(Exception e){
+		}
+		catch(Exception e){
 			System.err.println("Initialization failure ");
 		}
 	}
 
 	public void run(){
+
 		setLayout(new BorderLayout());
-		appletPanel.setBackground(Color.white);
-		this.add(appletPanel, "Center");
-		appletPanel.addMouseListener(this);
-		appletPanel.addMouseMotionListener(this);
+		appPanel.setBackground(Color.white);
+		this.add(appPanel, "Center");
+		appPanel.addMouseListener(this);
+		appPanel.addMouseMotionListener(this);
 
 		JPanel buttonPanel = new JPanel();
 		startButton.setForeground(Color.red);
@@ -77,15 +69,9 @@ public class Concave extends JApplet implements Runnable, ActionListener, MouseL
 		buttonPanel.add(addButton);
 		buttonPanel.add(opsiInit);
 		buttonPanel.add(startButton);
-		if(appletPanel.pointContainer.size()<4){
-			startButton.setEnabled(false);	
-		}else{
-			startButton.setEnabled(true);
-		}
 		this.add(buttonPanel, "North");
 		clearButton.addActionListener(this);
 		addButton.addActionListener(this);
-		startButton.addActionListener(this);
 
 		JPanel statusPanel = new JPanel();
 		pointerPosition.setText("(0,0)");
@@ -93,11 +79,8 @@ public class Concave extends JApplet implements Runnable, ActionListener, MouseL
 		status.setText("Ready");
 		statusPanel.add(status, "East");
 		this.add(statusPanel, "South");
+		
 	}
-
-	/**
-	Applet Control
-	*/
 
 	public void mouseExited(MouseEvent e){
 
@@ -108,7 +91,22 @@ public class Concave extends JApplet implements Runnable, ActionListener, MouseL
 	}
 
 	public void mousePressed(MouseEvent e){
+		if(e.getSource()!=appPanel){
+			return;
+		}else{
+			appPanel.addPoint(e.getX(), e.getY());
+			appPanel.repaint();
+			String[] pc = appPanel.getPointList();
+			int last = pc.length;
 
+			opsiInit.addItem(pc[last-1]);
+			opsiInit.setSelectedIndex(opsiInit.getItemCount()-1);
+			Object[] tempData = {opsiInit.getItemCount()-1, e.getX(), e.getY()};
+			//dataTable.setRowCount(1);
+			
+
+			appPanel.repaint();
+		}
 	}
 
 	public void mouseReleased(MouseEvent e){
@@ -116,27 +114,11 @@ public class Concave extends JApplet implements Runnable, ActionListener, MouseL
 	}
 
 	public void mouseClicked(MouseEvent e){
-		if(e.getSource()!=appletPanel){
-			return;
-		}else{
-			appletPanel.addPoint(e.getX(), e.getY());
-			appletPanel.repaint();
-			String[] pc = appletPanel.getPointList();
-			int last = pc.length;
 
-			opsiInit.addItem(pc[last-1]);
-			opsiInit.setSelectedIndex(opsiInit.getItemCount()-1);
-			Object[] tempData = {opsiInit.getItemCount()-1, e.getX(), e.getY()};
-			//dataTable.setRowCount(1);
-			if(appletPanel.pointContainer.size()>3){
-				startButton.setEnabled(true);
-			}
-			appletPanel.repaint();
-		}
 	}
 
 	public void mouseMoved(MouseEvent e){
-		if(e.getSource()!=appletPanel){
+		if(e.getSource()!=appPanel){
 			return;
 		}else{
 			pointerPosition.setText("("+e.getX()+","+e.getY()+")");
@@ -149,44 +131,30 @@ public class Concave extends JApplet implements Runnable, ActionListener, MouseL
 
 	public void actionPerformed(ActionEvent e){
 		if(e.getSource()==clearButton){
-			appletPanel.clearPanel();
-			appletPanel.repaint();
+			appPanel.clearPanel();
+			appPanel.repaint();
 		}else if(e.getSource()==addButton){
-			int returnVal = chooseFile.showOpenDialog(appletPanel);
+			int returnVal = chooseFile.showOpenDialog(appPanel);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
-					appletPanel.openFile(chooseFile);
-					appletPanel.repaint();
+					appPanel.openFile(chooseFile);
+					appPanel.repaint();
 			}
-		}else if (e.getSource()==startButton) {
-			appletPanel.startProcess();
-
-		}else{
-			return;
 		}
 	}
+
+
 }
-/**
-BEGIN PANEL APPLET
-*/
 
-class ConcavePanel extends JPanel{
-	/**
-	Costumizable
-	*/
-	private int pointRadius = 3;
-	/**
-	Variable
-	*/
+class AppPanel extends JPanel {
+	private static int pointRadius = 3;
 	private Graphics2D g;
-	private Concave controller;
-	public ArrayList<PointExt> pointContainer = new ArrayList();
-	private PointExt temp = new PointExt("A", 0,0);
-	private ArrayList<LineExt> lineContainer = new ArrayList();
-	private LineExt tempLine = new LineExt("A");
-
-	public ConcavePanel(Concave controller){
+	private App controller;
+	private PointExt temp = new PointExt("A", 0, 0);
+	public Data pointContainer = new Data();
+	public AppPanel(App controller){
 		this.controller = controller;
 	}
+
 	/**
 		Insert new Point at Panel
 		the point will be inserted at pointContainer.
@@ -198,6 +166,7 @@ class ConcavePanel extends JPanel{
 		pointContainer.add(temp);
 		controller.status.setText("Point Created: "+temp.getName()+" ("+x+","+y+")");
 	}
+	
 	/**
 		Draw new Point at the Panel
 		the name and location of the point
@@ -211,10 +180,8 @@ class ConcavePanel extends JPanel{
 		g.setColor(Color.red);
 		g.draw(tempPoint);
 		g.fill(tempPoint);
-	}
 
-	public void draw(LineExt line){
-		g.draw(line);
+
 	}
 	/**
 		Paint every component in the panel,
@@ -236,16 +203,9 @@ class ConcavePanel extends JPanel{
 				g2.setColor(Color.gray);
 				g2.drawString(tempPoint.getName()+"("+tempX+","+tempY+")", tempX, tempY);
 			}
-			if(lineContainer!=null){
-				for(LineExt tempLine : lineContainer){
-					g2.setColor(Color.blue);
-					draw(tempLine);
-				}
-			}
 		}
 
 	}
-
 	/**
 		Clear everything inside pointContainer
 		and repaint the panel
@@ -255,8 +215,6 @@ class ConcavePanel extends JPanel{
 			return;
 		}else{
 			pointContainer.clear();
-			lineContainer.clear();
-			controller.startButton.setEnabled(false);
 			controller.status.setText("===== Point Cleared =====");
 		}
 	}
@@ -266,7 +224,7 @@ class ConcavePanel extends JPanel{
 		Name(x, y)
 	**/
 	public void openFile(JFileChooser cf){
-		File fileData;	
+		File fileData;
 		fileData = cf.getSelectedFile();
 		controller.status.setText("Load data from : "+fileData.getAbsolutePath());
 		try{
@@ -282,9 +240,9 @@ class ConcavePanel extends JPanel{
 		}
 	}
 
-	public ArrayList<PointExt> fileHandler(String file) throws FileNotFoundException{
+	public Data fileHandler(String file) throws FileNotFoundException{
 		Scanner s = null;
-		ArrayList<PointExt> resExt = new ArrayList();
+		Data resExt = new Data();
 		String[] temp;
 		String[] temp2;
 		PointExt tempPointExt;
@@ -315,7 +273,6 @@ class ConcavePanel extends JPanel{
 		
 		return resExt;
 	}
-
 	/** 
 	Naming Method
 	get the latest alphabet for naming the Point.
@@ -366,40 +323,5 @@ class ConcavePanel extends JPanel{
 			i++;
 		}
 		return result;
-	}
-	/**
-	Start Process
-	*/
-	public void startProcess(){
-		ArrayList<LineExt> tempLineContainer = new ArrayList();
-		//tempLineContainer = 
-		this.basicProcess(pointContainer);
-		//lineContainer = tempLineContainer;
-		repaint();
-	}
-
-	public void basicProcess(ArrayList<PointExt> data){
-		ArrayList<PointExt> temp = new ArrayList();
-		
-		// Clone data
-		for (PointExt tempPoint : data) {
-			temp.add(tempPoint);
-		}
-		temp.remove(controller.opsiInit.getSelectedIndex());
-		for (int i=0;i<temp.size();i++) {
-			temp.get(i).printData();
-		}
-		// Sort temp for being the most left
-		PointExt tempPoint = new PointExt();
-		for(int i=0; i<temp.size()-1;i++){
-			for (int j=0;j<temp.size();j++){
-				
-			}
-		}		
-		
-	}
-
-	public void advanceProcess(){
-
 	}
 }
