@@ -59,6 +59,7 @@ public class App extends JApplet implements Runnable,MouseListener, ActionListen
 		catch(Exception e){
 			System.err.println("Initialization failure ");
 		}
+
 	}
 
 	public void run(){
@@ -158,6 +159,7 @@ class AppPanel extends JPanel {
 	private App controller;
 	private PointExt temp = new PointExt("A", 0, 0);
 	public Data pointContainer = new Data();
+	public DataLine lineContainer = new DataLine();
 	public AppPanel(App controller){
 		this.controller = controller;
 
@@ -188,9 +190,14 @@ class AppPanel extends JPanel {
 		g.setColor(Color.red);
 		g.draw(tempPoint);
 		g.fill(tempPoint);
-
-
 	}
+
+	public void drawLine(LineExt line){
+		g.setColor(Color.blue);
+	 		g.draw(line);
+		g.fill(line);
+	}
+
 	/**
 		Paint every component in the panel,
 		point from pointContainer.
@@ -210,6 +217,14 @@ class AppPanel extends JPanel {
 				float tempY = (float) tempPoint.getY();
 				g2.setColor(Color.gray);
 				g2.drawString(tempPoint.getName()+"("+tempX+","+tempY+")", tempX, tempY);
+			}
+		}
+
+		if(lineContainer == null){
+			return;
+		}else{
+			for(LineExt tempLine : lineContainer){
+				drawLine(tempLine);
 			}
 		}
 
@@ -344,7 +359,12 @@ class AppPanel extends JPanel {
 				tempContainer.add(temp);
 			}
 		}
-		tempContainer.sort();
-		tempContainer.printData();
+		tempContainer.find();
+		/*try{
+			lineContainer = tempContainer.coupling();
+		}
+		catch(Exception e){
+			System.out.println("Heap error");
+		}*/
 	}
 }
