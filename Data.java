@@ -1,34 +1,173 @@
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 public class Data extends ArrayList<PointExt> {
 
 	public PointExt getLeft(){
 		PointExt temp = this.get(0);
+		int x = 0;
 		if(this.size()>1){
 			for(int i = 1; i< this.size(); i++){
 				if(this.get(i).getX()<temp.getX()){
 					temp = this.get(i);
+					x = i;
 				}
 			}
-			
+			this.remove(x);
 		}
 		return temp;
 	}
 
-	public void find(){
-		PointExt[] arr = this.toArray(new PointExt[0]);
-		PointExt init = getLeft();
+	public PointExt getRight(){
+		PointExt temp = this.get(0);
+		if(this.size()>1){
+			for (int i = 1; i<this.size() ; i++) {
+				if(this.get(i).getX()>temp.getX()){
+					temp = this.get(i);
+				}
+			}
+		}
+		return temp;
+	}
 
-		if(init == arr[0]){
-			PointExt temp == arr[1];
-		}else{
-			PointExt temp == arr[0];
+	public void getSorted(){
+		Data result = new Data();
+		PointExt init = getLeft();
+		PointExt temp = this.get(0);
+		int flag = 0;
+		Data ori  = (Data) this.clone();
+		System.out.println("init : "+init.getName()+" temp : "+temp.getName());
+		for(int i = this.size()-1; i>=0; i--){
+			for(int j = 0; j<this.size(); j++){
+				if(init==getRight()){
+					flag = 1;
+				}
+
+				if(!result.contains(this.get(j))){
+					if(flag==0){
+						if((this.get(j).getX()>init.get(j).getX())&&(init.distance(this.get(j))<init.distance(temp))){
+							temp = this.get(j);
+						}
+					}else{
+						if((this.get(j).getX()<init.get(j).getX())&&(init.distance(this.get(j))<init.distance(temp))){
+							temp = this.get(j);
+						}
+					}
+				}
+			}
+
+			init = temp;
+			for(int k = 0; k<this.size();k++){
+				if(!result.contains(this.get(k))){
+					temp = this.get(k);
+				}
+			}
+			System.out.println("init : "+init.getName()+" temp : "+temp.getName());
 		}
-		
-		for(int i=0; i<arr.length;i++){
-			
+
+		/*for(int i = 0; i<this.size(); i++){
+			for(int j = 0; j<this.size(); j++){
+				if(init == getRight()){
+					flag=1;
+				}
+				if(init != temp){
+					System.out.println(init.getName()+"!="+temp.getName());
+					if((flag==0)){
+					/*if((this.get(j).getX()>init.getX())&&(init.distance(this.get(j))<init.distance(temp))&&(result.contains(this.get(j)))){
+						temp = this.get(j);
+					}*/
+
+			/*		if(this.get(j).getX()>init.getX()){
+						if(result.contains(this.get(j))==false&&ori.contains(this.get(j))==true) {
+							if(init.distance(this.get(j))<init.distance(temp)){
+								if(init.equals(temp)==false){
+									temp = this.get(j);
+								}
+							}
+						}
+					}
+
+				}else{
+					/*if((this.get(j).getX()<init.getX())&&(init.distance(this.get(j))<init.distance(temp))&&(result.contains(this.get(j)))){
+						temp = this.get(j);
+					}*/
+
+			/*		if(this.get(j).getX()<init.getX()){
+						if(result.contains(this.get(j))==false&&ori.contains(this.get(j))==true) {
+							if(init.distance(this.get(j))<init.distance(temp)){
+								if(init.equals(temp)==false){
+									temp = this.get(j);
+								}
+							}
+						}
+					}
+				}
+				}
+			}*/
+		//for (PointExt print : result ) {
+		//	System.out.println(print.hashCode());
+		//}
+	}
+
+	public void find(){
+		PointExt init = getLeft();
+		Data tempOri = (Data)this.clone();
+		Data tempData = new Data();
+		tempData.add(init);
+		PointExt temp = tempOri.get(0);
+		ListIterator<PointExt> it = tempOri.listIterator();
+		int flag = 0;
+		int idx = 0;
+		while(it.hasNext()){
+			while(it.hasNext()){
+				PointExt check = it.next();
+				if(check == getRight()){
+					flag = 1;
+				}
+
+				if(flag == 0){
+					if((check.getX()>init.getX())&&(init.distance(check)<init.distance(temp))&&!(tempData.contains(check))){
+						temp = check;
+						idx = it.nextIndex();
+					}
+				}else{
+					if((check.getX()<init.getX())&&(init.distance(check)<init.distance(temp))&&!(tempData.contains(check))){
+						temp = check;
+						idx = it.nextIndex();
+					}					
+				}
+			}
+			tempData.add(temp);
+			System.out.println(temp.getName());
+			tempOri.remove(temp);
+			it = tempOri.listIterator();
+			while(it.hasPrevious()){
+				PointExt check = it.next();
+				if(it.next() == getRight()){
+					flag = 1;
+				}
+
+				if(flag == 0){
+					if((check.getX()>init.getX())&&(init.distance(check)<init.distance(temp))&&!(tempData.contains(check))){
+						temp = check;
+						idx = it.nextIndex();
+					}
+				}else{
+					if((check.getX()<init.getX())&&(init.distance(check)<init.distance(temp))&&!(tempData.contains(check))){
+						temp = check;
+						idx = it.nextIndex();
+					}					
+				}
+			}
+			tempData.add(temp);
+			System.out.println(temp.getName());
+			tempOri.remove(temp);
+			it = tempOri.listIterator();
 		}
-		//for(int i=0; i<ext.size();i++){}
+
+		/*for (PointExt iterate : tempData ) {
+			System.out.println(iterate.getName());
+		}*/
 	}
 
 	public void sort(){

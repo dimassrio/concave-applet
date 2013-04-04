@@ -359,7 +359,11 @@ class AppPanel extends JPanel {
 				tempContainer.add(temp);
 			}
 		}
-		tempContainer.find();
+		try{
+			tempContainer.getSorted();
+		}catch (Exception e) {
+			System.out.println("Bazinga! "+e.getMessage());
+		}
 		/*try{
 			lineContainer = tempContainer.coupling();
 		}
