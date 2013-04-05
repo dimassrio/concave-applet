@@ -1,6 +1,7 @@
-import java.awt.Point;
+import java.awt.geom.Point2D.Double;
+import java.awt.geom.*;
 
-public class PointExt extends Point {
+public class PointExt extends Point2D.Double {
 	public String name;
 	public PointExt next;
 	public static void main(String[] args) {

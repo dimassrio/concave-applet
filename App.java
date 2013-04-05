@@ -85,7 +85,6 @@ public class App extends JApplet implements Runnable,MouseListener, ActionListen
 		status.setText("Ready");
 		statusPanel.add(status, "East");
 		this.add(statusPanel, "South");
-		
 	}
 
 	public void mouseExited(MouseEvent e){
@@ -194,7 +193,7 @@ class AppPanel extends JPanel {
 
 	public void drawLine(LineExt line){
 		g.setColor(Color.blue);
-	 		g.draw(line);
+	 	g.draw(line);
 		g.fill(line);
 	}
 
@@ -360,7 +359,7 @@ class AppPanel extends JPanel {
 			}
 		}
 		try{
-			tempContainer.getSorted();
+			lineContainer = tempContainer.getSorted();
 		}catch (Exception e) {
 			System.out.println("Bazinga! "+e.getMessage());
 		}

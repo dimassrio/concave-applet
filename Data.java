@@ -30,13 +30,13 @@ public class Data extends ArrayList<PointExt> {
 		return temp;
 	}
 
-	public void getSorted(){
+	public DataLine getSorted(){
 		Data result = new Data();
 		PointExt init = getLeft();
 		PointExt temp = this.get(0);
 		int flag = 0;
 		Data ori  = (Data) this.clone();
-		System.out.println("init : "+init.getName()+" temp : "+temp.getName());
+		result.add(init);
 		for(int i = this.size()-1; i>=0; i--){
 			for(int j = 0; j<this.size(); j++){
 				if(init==getRight()){
@@ -45,25 +45,38 @@ public class Data extends ArrayList<PointExt> {
 
 				if(!result.contains(this.get(j))){
 					if(flag==0){
-						if((this.get(j).getX()>init.get(j).getX())&&(init.distance(this.get(j))<init.distance(temp))){
+						if((this.get(j).getX()>init.getX())&&(init.distance(this.get(j))<init.distance(temp))){
 							temp = this.get(j);
 						}
 					}else{
-						if((this.get(j).getX()<init.get(j).getX())&&(init.distance(this.get(j))<init.distance(temp))){
+						if((this.get(j).getX()<init.getX())&&(init.distance(this.get(j))<init.distance(temp))){
 							temp = this.get(j);
 						}
 					}
 				}
 			}
-
+			result.add(temp);
 			init = temp;
 			for(int k = 0; k<this.size();k++){
 				if(!result.contains(this.get(k))){
 					temp = this.get(k);
 				}
 			}
-			System.out.println("init : "+init.getName()+" temp : "+temp.getName());
+			
 		}
+		result.add(result.get(1));
+
+		DataLine resultLine = new DataLine();
+
+		for(int i=0; i < result.size()-1; i++){
+			LineExt tempLine = new LineExt(getNext26(resultLine.size()), result.get(i), result.get(i+1));
+			resultLine.add(tempLine);
+			System.out.println(tempLine.getPext1().getName()+","+tempLine.getPext2().getName());
+		}
+
+		LineExt finalLine = new LineExt(getNext26(resultLine.size()), result.get(result.size()-1), result.get(0));
+		resultLine.add(finalLine);
+		return resultLine;
 
 		/*for(int i = 0; i<this.size(); i++){
 			for(int j = 0; j<this.size(); j++){
